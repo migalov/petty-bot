@@ -15,22 +15,31 @@ module.exports = {
             await interaction.deferReply();
 
             const nameCharacter = interaction.options.getString("name");
-            const apiURL = `${process.env.URL_HOST_API}/characters?populate=*`;
+            const urlCharacters = `${process.env.URL_HOST_API}/characters?populate=*`;
+            // const urlDiscordUsers = `${process.env.URL_HOST_API}/discord-users`;
 
             try {
-                const response = await axios.post(apiURL, {
+                // const responseDiscordUserId = await axios.post(urlDiscordUsers, {
+                //     "data": {
+                //         "discordUserId": interaction.user.id
+                //     }
+                // });
+                const responseCharacter = await axios.post(urlCharacters, {
                     "data": {
-                        "name": nameCharacter
+                        "name": nameCharacter,
+                        // "discordUser": responseDiscordUserId.data.data[0].id
                     }
                 });
-                const characterData = response.data;
+                const characterData = await responseCharacter.data;
                 const {name, roster, attackPower, gearscore, transcendence, characterClass} = characterData.data;
+                console.log(characterData.data);
+                
                 if(characterData.Error) {
                     await interaction.editReply(`Error: ${characterData.Error}`);
                     return;
                 }
 
-                await interaction.editReply(`Персонаж добавлен!\nНик: ${name}\nНик: ${characterClass.ruName}\nНаследие: ${roster}\nСила атаки: ${attackPower}\nУровень снаряжения: ${gearscore}\nУроень трансценденции: ${transcendence}`);
+                await interaction.editReply(`Персонаж добавлен!\nНик: ${name}\nКласс: ${characterClass.ruName}\nНаследие: ${roster}\nСила атаки: ${attackPower}\nУровень снаряжения: ${gearscore}\nУроень трансценденции: ${transcendence}`);
             }
 
             catch(error) {
