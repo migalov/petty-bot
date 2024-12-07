@@ -18,12 +18,6 @@ module.exports = {
         const name = character[0];
         const documentid = character[1];
         await interaction.reply(`Вы выбрали персонажа ${name}; documentId = ${documentid}`);
-        try {
-            await axios.put(`${hostAPI}/raids`)
-        }
-        catch {
-
-        }
     },
     async autocomplete(interaction) {
         const params = {
